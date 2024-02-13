@@ -1,11 +1,15 @@
-import { analytics } from "@/utils/analytics"
+import { Analytics, analytics } from "@/utils/analytics"
 
 const Page = async () => {
 
 
-    const pageView = await analytics.retrieve("pageview" , "11/02/2024")
+    const pageView = await analytics.retrieveDays("pageview" , 2)
 
-    return <pre className="text-white">{JSON.stringify(pageView)}</pre>
+    return <div className="min-h-screen w-full py-12 flex justify-center items-center">
+        <div className="relative w-full max-w-6x1 mx-auto text-white">
+            <AnalyticsDashboard />
+        </div>
+    </div>
 }
 
 export default Page
