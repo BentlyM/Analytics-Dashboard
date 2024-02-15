@@ -2,17 +2,48 @@
 
 import { analytics } from "@/utils/analytics"
 import { BarChart, Card } from "@tremor/react"
+import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react"
+import ReactCountryFlag, { ReactCountryFlagProps } from "react-country-flag"
 
 interface AnalyticsDashboardProps {
     avgVisitorsPerDay: string
     amtVisitorsToday: number
     timerseriesPageviews : Awaited<ReturnType<typeof analytics.retrieveDays>>
+    topCountries: [string , number][]
+}
+
+const Badge = ({percentage}: {percentage: number}) => {
+    const isPositive = percentage > 0
+    const isNeutral = percentage === 0
+    const isNegative = percentage < 0
+
+    if(isNaN(percentage)) return null
+
+    const positiveClassname = "bg-green-900/25 text-green-400 ring-green-400/25"
+    const neutralClassname = "bg-zinc-900/25 text-zinc-400 ring-zinc-400/25"
+    const negativeClassname = "bg-red-900/25 text-red-400 ring-red-400/25"
+
+    return (
+        <span className={`inline-flex gap-1 items-center rounded-md px-2 py-1 text-sx font-medium ring-1 ring-inset${
+            isPositive 
+            ? positiveClassname 
+            : isNeutral 
+            ? neutralClassname 
+            : negativeClassname
+        }`}>
+            {isPositive? <ArrowUpRight className="h-3 w-3" /> : null}
+            {isNeutral? <ArrowRight className="h-3 w-3" /> : null}
+            {isNegative? <ArrowDownRight className="h-3 w-3" /> : null}
+            {percentage.toFixed(0)}%
+        </span>
+    )
 }
 
 const AnalyticsDashboard = ({
     avgVisitorsPerDay,
     amtVisitorsToday,
     timerseriesPageviews,
+    topCountries
 }:
     AnalyticsDashboardProps) => {
     return (
@@ -36,6 +67,28 @@ const AnalyticsDashboard = ({
                 </p>
             </Card>
         </div>
+
+        <Card>
+            <h2 className="w-full text-dark tremor-content-strong text-center sm:left-left font-semibold text-xl">
+                this weeks top Visitors:
+            </h2>
+            <div className="col-span-3 flex items-center justify-between flex-wrap gap-8">
+                {topCountries?.map(([countryCode , number]) => {
+                    return <div className = 'flex items-center gap-3 text-dark-tremor-content-strong'>
+                        <p className="hidden sm:block text-tremor-content">
+                            {countryCode}
+                        </p>
+                        <ReactCountryFlag 
+                        className='text-5x1 sm:text-3x1' 
+                        svg
+                        countryCode={countryCode}
+                        />
+
+                        <p className="text-tremor-content sm:text-dark-tremor-content-strong">{number}</p>
+                    </div>
+                })} 
+            </div>
+        </Card>
 
         <Card>
             {timerseriesPageviews ? (
