@@ -64,7 +64,7 @@ const Page = async () => {
             <AnalyticsDashboard 
             avgVisitorsPerDay={avgVisitorsPerDay}
             amtVisitorsToday={amtVisitorsToday}
-            timerseriesPageviews = {pageviews}
+            timeseriesPageviews = {pageviews}
             topCountries={topCountries}
             />
         </div>
